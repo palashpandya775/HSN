@@ -219,7 +219,7 @@ int main(int argc, char * argv[]){
 		/* every 500 iterations for rho1 (Gives best CSS found yet)	                */
 		//printf("\n{i=%d, d=%lf} rej:%d\n", i+1, d, count_rej);
 		count_rej=0;
-		//Output to the files:
+		/*Output to the files:								*/
 		darr[i] = d;
 		if((i+1)%100==0){
 			for(j=i-99; j<i+1; j++){
@@ -260,7 +260,9 @@ int main(int argc, char * argv[]){
 	return 0;
 }
 
-void generate_rho0(gsl_matrix_complex * rho0, int dim, int dimn, int np , char * nm){ //Maximally entangled n qudit state
+void generate_rho0(gsl_matrix_complex * rho0, int dim, int dimn, int np , char * nm){ 
+	/*Reading rho1 from file
+	*/
 	char name[20] = "ppt\0";
 	strcat(name, nm);
 	strcat(name,".dat\0");
@@ -271,6 +273,8 @@ void generate_rho0(gsl_matrix_complex * rho0, int dim, int dimn, int np , char *
 }
 
 void print_matrix( gsl_matrix_complex * mat, int m, int n){
+	/*prints matrix of dimension mxn
+	*/
 	int i=0, j=0;
 	gsl_complex z;
 	for(i=0; i<m; i++){
@@ -284,7 +288,9 @@ void print_matrix( gsl_matrix_complex * mat, int m, int n){
 }
 
 void kronecker_product (gsl_matrix_complex * A, gsl_matrix_complex * B, gsl_matrix_complex * R, int nA, int mA, int nB, int mB){
-/* na <= nb && ma <= mb */
+	/*Kronecker product of A and B stored in R 
+	/*na <= nb && ma <= mb 	
+	*/
 	int i=0, j=0;
 	for(i=0;i<nA;i++){
 		for(j=0;j<mA;j++){
@@ -300,6 +306,8 @@ void kronecker_product (gsl_matrix_complex * A, gsl_matrix_complex * B, gsl_matr
 }
 
 void get_random_rho2(gsl_matrix_complex * p1[7], gsl_matrix_complex * p2[4], int dim, int dimn, int np, int flag){
+	/*Generate random rho2
+	*/
 	gsl_matrix_complex * rhoA = p2[0];
 	gsl_matrix_complex * intr = p1[3];
 	gsl_matrix_complex * rho2 = p1[2];
@@ -329,6 +337,8 @@ void get_random_rho2(gsl_matrix_complex * p1[7], gsl_matrix_complex * p2[4], int
 }
 
 void get_random_rhodxd(gsl_matrix_complex * rho4, gsl_matrix_complex * p2[4], int dim, int flag){
+	/*Generates random submatrices for rho2
+	*/
 	gsl_matrix_complex * a = p2[2];
 	int i, pr1=0, pr2=0; 
 	double rn1r=0., rn1i=0., rn2=0., rn22=0.;
@@ -348,6 +358,8 @@ void get_random_rhodxd(gsl_matrix_complex * rho4, gsl_matrix_complex * p2[4], in
 }
 
 double get_trace(gsl_matrix_complex * rho, int n){
+	/* Trace of matrix input rho
+	*/
 	int i;
 	gsl_complex tr = GSL_COMPLEX_ZERO;
 	for(i=0; i<n; i++){
