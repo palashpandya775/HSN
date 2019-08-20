@@ -2,25 +2,27 @@
 #Thank you Bianka.
 
 function css = gilbert(rho_0, rho_1)
+  tic;
+  CT_MAX = 1000;
   h = 0.001;
-  N = 1000;
   D_vals = [];
   
-  #step 1
+  #disp("step 1");
   cs = 0;
   ct = 0;
-  while(ct < N)
+  while(ct < CT_MAX)
     ct = ct + 1;
     
-    A = rand(2,1);
+    A = zeros(2,1);
+    B = zeros(2,1);
+    for k = [1:2]
+      A(k) = randn() + ((-1)^(randi(2)-1)) * (randn()*i);
+      B(k) = randn() + ((-1)^(randi(2)-1)) * (randn()*i);
+    endfor
     A = A / norm(A);
-    
-    B = rand(2,1);
-    B = B / norm(B);
-    
+    B = B / norm(B);  
     A = A * A';
     B = B * B';
-    
     rho_2 = kron(A,B);
     
     previous_d = trace((rho_0 - rho_1)^2);
@@ -52,13 +54,32 @@ function css = gilbert(rho_0, rho_1)
     if(result_d < previous_d)
       rho_1 = rho_1_candidate;
       D_vals(end+1) = trace((rho_0 - rho_1)^2);
-      cs = cs + 1
+      cs = cs + 1;
+      
+      printf("%d\t%f\n", cs, D_vals(end));
+      fflush(stdout);
     endif
     
   #disp("step 6");
   endwhile
-  
-  disp(D_vals');
   css = rho_1;
-endfunction
   
+  printf("\ntrace(css) = %f\n", trace(css));
+  printf("eig(css) = %f\n", transpose(eig(css)));
+  printf("\n");
+  toc
+endfunction
+
+function rho_0 = get_rho_0()
+  rho_0 = zeros(4);
+  rho_0(1,1) = 1;
+  rho_0(1,4) = 1;
+  rho_0(4,1) = 1;
+  rho_0(4,4) = 1;
+  rho_0 = rho_0 / trace(rho_0);
+endfunction
+
+function rho_1 = get_rho_1()
+  rho_1 = eye(4);
+  rho_1 = rho_1 / trace(rho_1);
+endfunction
