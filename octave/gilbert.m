@@ -1,28 +1,27 @@
 #Bianka is acknowledged hereby by Omer for reminding us all about the sqrt().
 #Thank you Bianka.
 
+1;
+
 function css = gilbert(rho_0, rho_1)
   tic;
   CT_MAX = 1000;
-  h = 0.001;
+  h = 0.01;
   D_vals = [];
   
   #disp("step 1");
   cs = 0;
   ct = 0;
-  while(ct < CT_MAX)
-    ct = ct + 1;
+  for ct = [1:CT_MAX]
+    A = randn(2,1) + randn(2,1)*i;
+    B = randn(2,1) + randn(2,1)*i;
     
-    A = zeros(2,1);
-    B = zeros(2,1);
-    for k = [1:2]
-      A(k) = randn() + ((-1)^(randi(2)-1)) * (randn()*i);
-      B(k) = randn() + ((-1)^(randi(2)-1)) * (randn()*i);
-    endfor
     A = A / norm(A);
-    B = B / norm(B);  
+    B = B / norm(B);      
+    
     A = A * A';
     B = B * B';
+    
     rho_2 = kron(A,B);
     
     previous_d = trace((rho_0 - rho_1)^2);
@@ -39,13 +38,12 @@ function css = gilbert(rho_0, rho_1)
     #disp("step 4");
     p = 0;
     min_p = trace((rho_0 - p*rho_1 - (1-p)*rho_2)^2);
-    while(p <= 1)
+    for p = [0:h:1]
       found_p = trace((rho_0 - p*rho_1 - (1-p)*rho_2)^2);
       if(found_p < min_p)
         min_p = found_p;
       endif
-      p = p + h;
-    endwhile
+    endfor
   
     #disp("step 5");
     p = min_p;
@@ -61,7 +59,7 @@ function css = gilbert(rho_0, rho_1)
     endif
     
   #disp("step 6");
-  endwhile
+  endfor
   css = rho_1;
   
   printf("\ntrace(css) = %f\n", trace(css));
