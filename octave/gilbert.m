@@ -1,10 +1,7 @@
-#Bianka is acknowledged hereby by Omer for reminding us all about the sqrt().
-#Thank you Bianka.
-
-#TODO: Add support for variable d
-
-1;
-
+#fixed d = 4, d1 = 2, d2 = 2
+#input: rho_0 being the state to test
+#input: rho_1 beint the sep state to start with
+#output: css closest seperable state found
 function css = gilbert(rho_0, rho_1)
   tic;
   CT_MAX = 1000;
@@ -68,18 +65,4 @@ function css = gilbert(rho_0, rho_1)
   printf("eig(css) = %f\n", transpose(eig(css)));
   printf("\n");
   toc
-endfunction
-
-function rho_0 = get_rho_0()
-  rho_0 = zeros(4);
-  rho_0(1,1) = 1;
-  rho_0(1,4) = 1;
-  rho_0(4,1) = 1;
-  rho_0(4,4) = 1;
-  rho_0 = rho_0 / trace(rho_0);
-endfunction
-
-function rho_1 = get_rho_1()
-  rho_1 = eye(4);
-  rho_1 = rho_1 / trace(rho_1);
 endfunction
