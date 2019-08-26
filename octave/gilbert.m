@@ -1,6 +1,8 @@
 #Bianka is acknowledged hereby by Omer for reminding us all about the sqrt().
 #Thank you Bianka.
 
+#TODO: Add support for variable d
+
 1;
 
 function css = gilbert(rho_0, rho_1)
