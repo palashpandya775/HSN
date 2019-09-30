@@ -3,7 +3,7 @@
 #input: ds vector containing subsystems dimensions
 #output: css_d closest seperable state of dimension d found
 #assume: d = prod(ds)
-function css_d = gilbert_d(rho_0_d, rho_1_d, ds)
+function css_d = gilbert_d_bures(rho_0_d, rho_1_d, ds)
   tic;
   CS_MAX = 500;
   D_vals = [];
@@ -20,7 +20,7 @@ function css_d = gilbert_d(rho_0_d, rho_1_d, ds)
   cs = 0;
   ct = 0;
   
-  while(cs < CS_MAX)
+  while(ct < CS_MAX)
     rho_2_d = 1;
     for i = ds
       A = randn(i,1) + randn(i,1)*i;
@@ -29,11 +29,12 @@ function css_d = gilbert_d(rho_0_d, rho_1_d, ds)
       rho_2_d = kron(rho_2_d, A);
     endfor
     
-    previous_d = trace((rho_0_d - rho_1_d)^2);
+    previous_d = bures(rho_1_d, rho_0_d);
     
     #disp("step 2");
     pre_crit = trace((rho_2_d - rho_1_d)*(rho_0_d - rho_1_d));
     if(pre_crit <= 0)
+      ct++;
       continue;
     endif
     
@@ -47,16 +48,17 @@ function css_d = gilbert_d(rho_0_d, rho_1_d, ds)
     #disp("step 5");
     p = min_p;
     rho_1_candidate_d = p*rho_1_d + (1-p)*rho_2_d;
-    result_d = trace((rho_0_d - rho_1_candidate_d)^2);
+    result_d = bures(rho_1_candidate_d, rho_0_d);
     if(result_d < previous_d && p >= 0 && p <=1)
       rho_1_d = rho_1_candidate_d;
-      D_vals(end+1) = trace((rho_0_d - rho_1_d)^2);
+      D_vals(end+1) = bures(rho_1_d, rho_0_d);
       cs = cs + 1;
       
       printf("%d\t%f\n", cs, D_vals(end));
       fflush(stdout);
     endif
   
+  ct++;
   #disp("step 6");
   endwhile
   css_d = rho_1_d;
