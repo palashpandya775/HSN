@@ -7,6 +7,8 @@ function css_d = gilbert_d(rho_0_d, rho_1_d, ds)
   tic;
   CS_MAX = 5000;
   D_vals = [];
+  mu = 0;
+  sigma = 100000;
   
   #dimensions
   d = rows(rho_0_d);
@@ -23,7 +25,8 @@ function css_d = gilbert_d(rho_0_d, rho_1_d, ds)
   while(cs < CS_MAX)
     rho_2_d = 1;
     for i = ds
-      A = randn(i,1) + randn(i,1)*i;
+      #A = randn(i,1) + randn(i,1)*i;
+      A = normrnd(mu, sigma, [i,1]) + normrnd(mu, sigma, [i,1])*i;
       A = A / norm(A);
       A = A * A';
       rho_2_d = kron(rho_2_d, A);
